@@ -8,10 +8,10 @@ const production = process.env.NODE_ENV === 'production';
 
 
 module.exports = {
-    entry: { myAppName: path.resolve(__dirname, "./src/index.js") },
+    entry: { myApp: path.resolve(__dirname, "./src/index.js") },
     output: {
         path: path.resolve(__dirname, "./dist"),
-        filename: production ? '[name].[contenthash].js' : '[name].js',
+        filename: production ? '[name].[hash].js' : '[name].js',
     },
     module: {
         rules: [
@@ -21,23 +21,11 @@ module.exports = {
                 use: ["babel-loader"],
             },
             {
-                test: /\.s(a|c)ss$/,
+                test: /\.(css)$/,
                 exclude: /node_modules/,
                 use: [
                     production ? MiniCssExtractPlugin.loader : 'style-loader',
-                    {
-                        loader: 'css-loader',
-                        options: {
-                            modules: true,
-                            sourceMap: !production
-                        }
-                    },
-                    {
-                        loader: 'sass-loader',
-                        options: {
-                            sourceMap: !production
-                        }
-                    }
+                    'css-loader'
                 ]
             },
 
@@ -48,14 +36,11 @@ module.exports = {
     },
     plugins: [
         new CleanWebpackPlugin(),
-        new webpack.HotModuleReplacementPlugin(),
         new HtmlWebpackPlugin({
-            title: "Webpack & React",
-            template: "./src/index.html",
-            favicon: "./public/favicon.ico"
+            template: "./public/index.html",
         }),
         new MiniCssExtractPlugin({
-            filename: production ? '[name].[contenthash].css' : '[name].css',
+            filename: production ? '[name].[hash].css' : '[name].css',
         }),
     ],
     devServer: {
